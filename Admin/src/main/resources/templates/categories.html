@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head th:replace="fragments :: header">
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="fragments :: sidebar"></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="fragments :: topbar"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <!-- Button CRUD -->
+                <div class="row p-2">
+                    <!-- Add button -->
+                    <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#exampleModal"
+                            data-whatever="@mdo">Add Category
+                    </button>
+                </div>
+                <!-- End button CRUD -->
+
+                <div th:if="${size == 0}">
+                    <p>No Category</p>
+                </div>
+                <div th:if="${success}" class="text-center alert alert-success">
+                    <p th:text="${success}"></p>
+                </div>
+                <div th:if="${error}" class="text-center alert alert-secondary">
+                    <p th:text="${failed}"></p>
+                </div>
+                <div th:if="${wrong}" class="text-center alert alert-secondary">
+                    <p th:text="${wrong}"></p>
+                </div>
+                <div>
+                    <table class="table table-striped" th:if="${size > 0}">
+                        <thead>
+                        <tr>
+                            <th scope="col">Category Index</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col">Edit Category</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="category : ${categories}">
+                        <tr>
+                            <th scope="row" th:text="${category.id}"></th>
+                            <td th:text="${category.name}"></td>
+                            <!-- <td th:text="${category.is_activated()}"></td> -->
+                            <td> <!-- Change button -->
+                                <!-- <button type="button" class="btn btn-success" data-toggle="modal"
+                                        data-target="#changeCategoryModal"
+                                        data-whatever="">Edit Category
+                                </button> -->
+                                <a id="editButton" th:href="@{/findById/(id=${category.id})}" class="btn btn-success">Update</a>
+                            </td>
+                            <td>
+                                <a th:if="${category.is_activated() == true}"
+                                   th:href="@{/delete-category/(id=${category.id})}" class="btn btn-primary">Delete</a>
+                                <a th:if="${category.is_activated() == false}"
+                                   th:href="@{/enable-category/(id=${category.id})}" class="btn btn-warning">Enable</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add category modal -->
+                <div>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <form th:action="@{/add-category}" method="POST" th:object="${categoryNew}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Name</label>
+                                            <input type="text" th:field="*{name}" class="form-control"
+                                                   id="recipient-name">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- End add category modal -->
+
+                <!-- Change category modal --->
+                <div>
+                    <div class="modal fade" id="editModal" tabindex="-1"
+                         aria-labelledby="editModal"
+                         aria-hidden="true">
+                        <form th:action="@{/update-category}" method="put">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Category</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="idEdit" class="col-form-label">Id</label>
+                                            <input type="text" class="form-control"
+                                                   id="idEdit" name="id">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="nameEdit" class="col-form-label">Name</label>
+                                            <input type="text" class="form-control"
+                                                   id="nameEdit" name="name">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- End change category modal -->
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer th:replace="fragments :: footer"></footer>
+        <!-- End of Footer -->
+
+    </div>
+
+    <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a th:replace="fragments :: scroll"></a>
+
+<!--Logout Modal -->
+<div th:replace="fragments :: logoutModal"></div>
+
+<!-- script -->
+<div th:replace="fragments :: scripts"></div>
+<script th:src="@{/js/categories.js}"></script>
+
+<!-- Page level plugins -->
+<script th:src="@{vendor/chart.js/Chart.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script th:src="@{js/demo/chart-area-demo.js}"></script>
+<script th:src="@{js/demo/chart-pie-demo.js}"></script>
+
+</body>
+
+</html>

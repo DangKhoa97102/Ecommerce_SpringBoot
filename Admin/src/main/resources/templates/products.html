@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head th:replace="fragments :: header">
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul th:replace="fragments :: sidebar"></ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <nav th:replace="fragments :: topbar"></nav>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <!-- Page Heading -->
+
+                <div th:if="${success}" class="text-center alert alert-success">
+                    <p th:text="${success}"></p>
+                </div>
+                <div th:if="${error}" class="text-center alert alert-secondary">
+                    <p th:text="${failed}"></p>
+                </div>
+                <!-- Table -->
+                <div th:if="${size == 0}">No products in shop</div>
+
+                <!-- Search Products -->
+                <div>
+                    <form th:action="@{/search-result/0}" method="get">
+                        <label for="search">Search Product</label>
+                        <input type="text" id="search" name="keyword">
+                        <button class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+
+                <!-- Button CRUD -->
+                <div class="row p-2">
+                    <!-- Add button -->
+                    <a type="button" th:href="@{/add-product}" class="btn btn-primary mx-2">
+                        Add Product
+                    </a>
+                </div>
+
+                <div th:if="${size > 0}">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Update</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr th:each="product : ${products}">
+                                <th scope="row" th:text="${product.name}">1</th>
+                                <td th:text="${product.category.name}"></td>
+                                <td th:text="${product.costPrice}"></td>
+                                <td th:text="${product.currentQuantity}"></td>
+                                <td><img src="" style="width: 40px; height: 40px;"
+                                    th:src="*{'data:image/jpeg;base64,' + {product.image}}"></td>
+                                <td>
+                                    <a class="btn btn-primary" th:href="@{/update-product/{id} (id = ${product.id})}">
+                                        Update
+                                    </a>
+
+                                </td>
+                                <td>
+                                    <a th:if="${product.is_deleted() == true}"
+                                       th:href="@{/enabled-product/{id} (id = ${product.id})}" class="btn btn-primary">
+                                        Enable
+                                    </a>
+                                    <a th:if="${product.is_deleted() == false}"
+                                       th:href="@{/deleted-product/{id} (id = ${product.id})}" class="btn btn-success">
+                                        Delete
+                                    </a>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li th:if="${currentPage != 0}" class="page-item">
+                                    <a th:href="@{'/products/' + ${currentPage - 1}}" class="page-link" href="#">
+                                        Previous
+                                    </a>
+                                </li>
+                                <li th:each="i : ${#numbers.sequence(1,totalPages)}"
+                                    th:classappend="${currentPage == i - 1 ? 'active' : ''}" class="page-item">
+                                    <a th:href="@{'/products/' + ${i - 1}}" class="page-link" href="#">
+                                        <span th:text="${i}"></span>
+                                    </a>
+                                </li>
+                                <li th:if="${(currentPage + 1) != totalPages}" class="page-item">
+                                    <a th:href="@{'/products/' + ${currentPage + 1}}" class="page-link" href="#">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer th:replace="fragments :: footer"></footer>
+        <!-- End of Footer -->
+
+    </div>
+
+    <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a th:replace="fragments :: scroll"></a>
+
+<!--Logout Modal -->
+<div th:replace="fragments :: logoutModal"></div>
+
+<!-- script -->
+<div th:replace="fragments :: scripts"></div>
+<script th:src="@{/js/categories.js}"></script>
+
+<!-- Page level plugins -->
+<script th:src="@{vendor/chart.js/Chart.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script th:src="@{js/demo/chart-area-demo.js}"></script>
+<script th:src="@{js/demo/chart-pie-demo.js}"></script>
+
+</body>
+
+</html>
